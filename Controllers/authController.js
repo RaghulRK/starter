@@ -88,6 +88,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     // Route is protected navigate to next
     req.user = freshUser; // pass data from one route to another
+    req.locals.user = freshUser; // pass data to template of pug
     next();
 })
 

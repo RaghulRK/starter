@@ -10,14 +10,14 @@
     "watch:js": "parcel watch ./public/js/index.js --target default",
     "build:js": "parcel build ./public/js/index.js --target default"
   },
-"targets": {
-  "default": {
-    "distDir": "./public/js",
-    "sourceMap": false,
-    "outputFormat": "global",
-    "isLibrary": true
-  }
-},
+  "targets": {
+    "default": {
+      "distDir": "./public/js",
+      "sourceMap": false,
+      "outputFormat": "global",
+      "isLibrary": true
+    }
+  },
   "author": "raghul",
   "license": "ISC",
   "dependencies": {
