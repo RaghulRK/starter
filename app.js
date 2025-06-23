@@ -10,9 +10,9 @@ const cookieParser = require('cookie-parser');
 
 const AppError = require('./Utils/appError');
 const globalErrorHandler = require('./Controllers/errorController');
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
+const tourRouter = require('./Routes/tourRoutes');
+const userRouter = require('./Routes/userRoutes');
+const reviewRouter = require('./Routes/reviewRoutes')
 const viewRouter = require('./Routes/viewRoutes');
 
 const app = express();
@@ -25,7 +25,30 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
-app.use(helmet());
+//app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://fonts.googleapis.com',  // ✅ allow external stylesheets
+      ],
+      fontSrc: [
+        "'self'",
+        'https://fonts.gstatic.com',     // ✅ allow actual font files
+      ],
+      connectSrc: [
+        "'self'",
+        'http://127.0.0.1:2000',
+        'ws://localhost:1234'
+      ],
+      imgSrc: ["'self'", "data:"],
+    },
+  })
+);
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {

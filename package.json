@@ -2,21 +2,12 @@
   "name": "natrous",
   "version": "1.0.0",
   "description": "learning node ",
-  "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb nodemon server.js",
-    "watch:js": "parcel watch ./public/js/index.js --target default",
-    "build:js": "parcel build ./public/js/index.js --target default"
-  },
-  "targets": {
-    "default": {
-      "distDir": "./public/js",
-      "sourceMap": false,
-      "outputFormat": "global",
-      "isLibrary": true
-    }
+    "build:js": "parcel build public/js/bundle.js --dist-dir public/js/ --public-url /js/ --no-content-hash",
+    "watch:js": "parcel watch public/js/bundle.js --dist-dir public/js --public-url /js --no-content-hash"
   },
   "author": "raghul",
   "license": "ISC",
@@ -54,7 +45,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
-    "parcel": "^2.15.2",
+    "parcel": "^2.15.4",
     "prettier": "^3.5.3"
   }
 }
