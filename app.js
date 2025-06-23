@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 
 const AppError = require('./Utils/appError');
 const globalErrorHandler = require('./Controllers/errorController');
-const tourRouter = require('./Routes/tourRoutes');
+const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./Routes/userRoutes');
 const reviewRouter = require('./Routes/reviewRoutes')
 const viewRouter = require('./Routes/viewRoutes');
