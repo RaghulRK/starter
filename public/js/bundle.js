@@ -12611,7 +12611,7 @@ const updateSettings = async (data, type)=>{
             url,
             data
         });
-        if (res.data.status === 'success') (0, _alerts.showAlert)('success', `${type.toUpperCase()} updated successfully!`);
+        if (res.data.status === 'Success') (0, _alerts.showAlert)('success', `${type.toUpperCase()} updated successfully!`);
     } catch (err) {
         (0, _alerts.showAlert)('error', err.response?.data?.message || 'Update failed');
     }
