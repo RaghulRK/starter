@@ -60,7 +60,7 @@ exports.updateMe = catchasync(async(req,res,next) => {
 
     // 2 filter the body by resticting to update only the required fields to updated in DB
     const filteredBody = filterObj(req.body, 'name', 'email');
-    if(req.file) filterObj.photo = req.file.filename;
+    if(req.file) filteredBody.photo = req.file.filename;
 
     // 3 update using findbyIDandUpdate as here we are not updating the password\
     const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
