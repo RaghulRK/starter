@@ -2,9 +2,61 @@ const AppError = require("../Utils/appError");
 const Tour = require("./../Models/tourModel");
 const catchasync = require("./../Utils/catchAsync");
 const factory = require("./handlerFactory");
+const multer = require("multer");
+const sharp = require('sharp');
 // const APIFeatures = require("./../Utils/apiFeatures");
 
+const multerStorage = multer.memoryStorage();
 
+// filter by checking only uploadin the jpeg images only
+const multerfilter=(req,file,cb) => {
+    if(file.mimetype.startsWith('image')){
+        cb(null,true);
+    } else {
+        cb(new AppError("image is not proper, please upload only image", 400),false);
+    }
+}
+const upload = multer({
+    storage:multerStorage,
+    fileFilter:multerfilter
+});
+
+exports.uploadTourImages = upload.fields([
+    {name: 'imageCover', maxCount: 1},
+    {name: 'images', maxCount:3}
+])
+
+// for single upload.single('photo')
+// for single with multiple image upload.array('images',5);
+// for mix and match above one
+
+exports.resizeTourImages = catchasync(async (req, res, next) => {
+    if (!req.files.imageCover || !req.files.images) return next();
+
+    console.log(req.files.imageCover)
+    // update imagecover
+    req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+    await sharp(req.files.imageCover[0].buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${req.body.imageCover}`);
+
+    // upload images
+    req.body.images = [];
+    await Promise.all(
+        req.files.images.map(async (file, i) => {
+            const filename = `tour-${req.params.id}-${Date.now()}-${i+1}.jpeg`;
+            await sharp(file.buffer)
+                .resize(2000, 1333)
+                .toFormat('jpeg')
+                .jpeg({ quality: 90 })
+                .toFile(`public/img/tours/${filename}`);
+            req.body.images.push(filename);
+        })
+    )
+    next();
+})
 // alias routing by setting predefined query parameter values
 exports.aliasRoute = (req, res, next) => {
     req.query.limit = '5';

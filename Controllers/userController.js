@@ -44,14 +44,14 @@ const filterObj = (obj,...allowedFields) =>{
     return newObj;
 }
 exports.UploadPhoto = upload.single('photo');
-exports.resizeuserphoto = (req, res,next)=> {
+exports.resizeuserphoto = catchasync(async(req, res,next)=> {
     if(!req.file) return next();
     
     req.file.filename = `User-${req.user.id}-${Date.now()}.jpeg`;
-    sharp(req.file.buffer).resize(500,500).toFormat('jpeg').jpeg({quality: 90}).toFile(`public/img/users/${req.file.filename}`);
+    await sharp(req.file.buffer).resize(500,500).toFormat('jpeg').jpeg({quality: 90}).toFile(`public/img/users/${req.file.filename}`);
     
     next();
-}
+});
 exports.updateMe = catchasync(async(req,res,next) => {
     // 1 check if user tries to update password and throw error
     if(req.body.password || req.body.passwordConfirm) {
