@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const htmltoText = require("html-to-text");
 const pug = require("pug");
 
-exports.module = class Email {
+module.exports = class Email {
     constructor(user, url) {
         this.to = user.email;
         this.from = `Raghul Kumar <${process.env.EMAIL_FROM}>`;
@@ -42,11 +42,14 @@ exports.module = class Email {
             to: this.to,
             subject,
             html,
-            text: htmltoText.fromString(html),
+            text: htmltoText.htmlToText(html)
         }
         await this.newTransport().sendMail(mailOptions);
     }
     async sendWelcome() {
         await this.send("welcome", "Welcome to natours family!");
+    }
+    async sendResetPassword(){
+        await this.send("passwordReset", "Your password reset token (valid for only 10 minutes)");
     }
 }
