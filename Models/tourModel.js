@@ -159,7 +159,6 @@ tourSchema.virtual('reviews', {
 //post document middleware
 
 tourSchema.post('save', function (doc, next) {
-    console.log(doc);
     next();
 })
 
@@ -180,7 +179,7 @@ tourSchema.pre(/^find/, function (next) {
 })
 
 tourSchema.post(/^find/, function (docs, next) {
-    console.log(`Time took to execute is ${Date.now() - this.start}`);
+    //console.log(`Time took to execute is ${Date.now() - this.start}`);
     //console.log(docs);
     next();
 })

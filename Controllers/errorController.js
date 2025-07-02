@@ -35,7 +35,7 @@ const sendProdError = (err, req, res) => {
     }
     // 2) Rendering Error // operational and trusted error send to frontend
     if (err.operational) {
-        console.log(err);
+        //console.log(err);
         return res.status(err.statusCode).render('error', {
             title: "something went wrong!",
             msg: err.message
