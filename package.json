@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "learning node ",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb nodemon server.js",
     "build:js": "parcel build public/js/bundle.js --dist-dir public/js/ --public-url /js/ --no-content-hash",
@@ -52,5 +53,8 @@
     "eslint-plugin-react": "^7.37.4",
     "parcel": "^2.15.4",
     "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
