@@ -46,7 +46,6 @@ exports.getCheckOutSession = catchasync(async (req, res, next) => {
 
 // this not secure way of creating booking to db, temporaray way, later will be done using stripe webhooks once it is deployed
 exports.createBookingCheckout = catchasync(async (req, res, next) => {
-    console.log(req.query);
     const { tour, user, price } = req.query;
     if (!tour && !user && !price) return next();
     await Booking.create({
