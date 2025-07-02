@@ -14,6 +14,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./Routes/userRoutes');
 const reviewRouter = require('./Routes/reviewRoutes')
 const viewRouter = require('./Routes/viewRoutes');
+const bookingRouter = require('./Routes/bookingRoutes');
 
 const app = express();
 
@@ -28,27 +29,43 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
+    useDefaults: false, // Turn off default set to customize fully
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'", // only for dev
+        "'unsafe-eval'",   // only for dev
+        "https://js.stripe.com"
+      ],
       styleSrc: [
         "'self'",
         "'unsafe-inline'",
-        'https://fonts.googleapis.com',  // ✅ allow external stylesheets
+        "https://fonts.googleapis.com"
       ],
       fontSrc: [
         "'self'",
-        'https://fonts.gstatic.com',     // ✅ allow actual font files
+        "https://fonts.gstatic.com"
       ],
       connectSrc: [
         "'self'",
-        'http://127.0.0.1:2000',
-        'ws://localhost:1234'
+        "http://127.0.0.1:2000",
+        "ws://localhost:1234"
+      ],
+      frameSrc: [
+        "'self'",
+        "https://js.stripe.com",     // ✅ CRUCIAL for iframes
+        "https://hooks.stripe.com"   // ✅ Optional but useful for Stripe
       ],
       imgSrc: ["'self'", "data:"],
+      formAction: [
+        "'self'",
+        "https://hooks.stripe.com"   // ✅ Needed if using redirect/Checkout
+      ],
     },
   })
 );
+
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
@@ -65,7 +82,7 @@ app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb'})); // to data from form submit action method
+app.use(express.urlencoded({ extended: true, limit: '10kb' })); // to data from form submit action method
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
@@ -100,6 +117,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

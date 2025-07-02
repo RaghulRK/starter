@@ -1,5 +1,5 @@
 const AppError = require("./../Utils/appError");
-const sendDevError = (res, req, err) => {
+const sendDevError = (err, req, res) => {
     // A) Handle API
     if (req.originalUrl.startsWith('/api')) {
         return res.status(err.statusCode).json({
@@ -15,7 +15,7 @@ const sendDevError = (res, req, err) => {
         msg: err.message
     })
 }
-const sendProdError = (res, req, err) => {
+const sendProdError = (err, req, res) => {
     // 1) API error
     if (req.originalUrl.startsWith('/api')) {
         // all the operational errors are logged here
@@ -74,7 +74,7 @@ module.exports = (err, req, res, next)=>{
     err.statusCode = err.statusCode  || 500;
     err.status = err.status || 'error';
     if(process.env.NODE_ENV === "development"){
-        sendDevError(res, req, err);
+        sendDevError(err, req, res);
     } else if( process.env.NODE_ENV === "production"){
         let error ={...err};
         error.message = err.message;
@@ -93,6 +93,6 @@ module.exports = (err, req, res, next)=>{
         if(err.name == "TokenExpiredError"){
             error = handleJWTExpiredToken();
         }
-        sendProdError(res, req,error);
+        sendProdError(error, req,res);
     }
 }

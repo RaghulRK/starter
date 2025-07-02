@@ -671,17 +671,16 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 var _mapbox = require("./mapbox");
 var _login = require("./login");
 var _updateSettings = require("./updateSettings");
+var _stripe = require("./stripe");
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
+const bookBtn = document.getElementById('book-tour');
 // DELEGATION
-if (mapBox) {
-    const locations = JSON.parse(mapBox.dataset.locations);
-    (0, _mapbox.displayMap)(locations);
-}
+mapBox;
 if (loginForm) loginForm.addEventListener('submit', (e)=>{
     e.preventDefault();
     const email = document.getElementById('email').value;
@@ -714,8 +713,13 @@ if (userPasswordForm) userPasswordForm.addEventListener('submit', async (e)=>{
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
 });
+if (bookBtn) bookBtn.addEventListener('click', (e)=>{
+    e.target.textContent = 'Processing...';
+    const { tourId } = e.target.dataset;
+    (0, _stripe.bookTour)(tourId);
+});
 
-},{"@babel/polyfill":"dTCHC","./mapbox":"3zDlz","./login":"7yHem","./updateSettings":"l3cGY"}],"dTCHC":[function(require,module,exports,__globalThis) {
+},{"@babel/polyfill":"dTCHC","./mapbox":"3zDlz","./login":"7yHem","./updateSettings":"l3cGY","./stripe":"10tSC"}],"dTCHC":[function(require,module,exports,__globalThis) {
 "use strict";
 require("f50de0aa433a589b");
 var _global = _interopRequireDefault(require("4142986752a079d4"));
@@ -12614,6 +12618,30 @@ const updateSettings = async (data, type)=>{
         if (res.data.status === 'Success') (0, _alerts.showAlert)('success', `${type.toUpperCase()} updated successfully!`);
     } catch (err) {
         (0, _alerts.showAlert)('error', err.response?.data?.message || 'Update failed');
+    }
+};
+
+},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"10tSC":[function(require,module,exports,__globalThis) {
+/* eslint-disable */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "bookTour", ()=>bookTour);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alerts = require("./alerts");
+const stripe = Stripe('pk_test_51RfkcbCv294WKXNor1pHNNBzIUVJBrWJlvHfc1hPDJSk9haVVJwX1Lf2UqjRX5MiClgz0NbynFaUsknhSvW0Lxpy00qxCiiKwC');
+const API_URL = '';
+const bookTour = async (tourId)=>{
+    try {
+        // call the api to get the session
+        const session = await (0, _axiosDefault.default)(`${API_URL}/api/v1/bookings/checkout-session/${tourId}`);
+        console.log(session);
+        // after getting the create the session and process the payment based on session ID
+        await stripe.redirectToCheckout({
+            sessionId: session.data.session.id
+        });
+    } catch (err) {
+        console.log(err);
+        (0, _alerts.showAlert)('error', err);
     }
 };
 
