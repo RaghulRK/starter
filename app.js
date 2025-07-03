@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./Utils/appError');
 const globalErrorHandler = require('./Controllers/errorController');
@@ -24,6 +25,21 @@ app.enable('trust proxy');
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
+// implementing CORS origin tou url hosted application to share the resource acroos domain
+
+app.use(cors());
+// add the cors to all the incoming request headers.
+// allow cross -origin request
+// backend - api.natours.com  frontend - natours.com
+
+// app.use(cors({
+//   origin: "www.natrous.com"
+// }))
+
+// unsimple request like delete, patch, post
+// first req will be sent to server, server will verify and send back the response, then the delete value occurs
+app.options("*", cors());
 
 // 1) GLOBAL MIDDLEWARES
 // Serving static files
