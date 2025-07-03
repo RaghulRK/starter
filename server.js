@@ -44,3 +44,11 @@ process.on('unhandledRejection', err => {
         process.exit(1);
     })
 })
+
+// sigterm is special type of signal received from server to shutdown, in which for each 24 hours, heroku sends signal to restart, we complete all the pending then close, so only server.close is specified
+process.on('SIGTERM', ()=>{
+    console.log("SIGTERM Signal received to terminate!!");
+    server.close(()=>{
+        console.log("Process Terminated!!"); // no need of specifying the process.exit - sigterm takes care of shutting down
+    })
+})
