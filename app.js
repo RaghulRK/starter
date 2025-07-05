@@ -12,7 +12,7 @@ const cors = require('cors');
 
 const AppError = require('./Utils/appError');
 const globalErrorHandler = require('./Controllers/errorController');
-const tourRouter = require('./routes/tourRoutes');
+const tourRouter = require('./Routes/tourRoutes');
 const userRouter = require('./Routes/userRoutes');
 const reviewRouter = require('./Routes/reviewRoutes')
 const viewRouter = require('./Routes/viewRoutes');
@@ -103,7 +103,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.use("/webcheckout-sessions", express.raw({ type: 'application/json' }), bookingController.createBookingCheckout)
+//app.use("/webcheckout-sessions", express.raw({ type: 'application/json' }), bookingController.createBookingCheckout)
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' })); // to data from form submit action method

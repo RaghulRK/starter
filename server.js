@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const app = require("./app");
 
 // below is the uncaught exception for sync functions or code and should be defined at first
 process.on("uncaughtException", err => {
@@ -11,7 +12,7 @@ process.on("uncaughtException", err => {
 dotenv.config({ path: "./config.env" });
 
 //const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
 mongoose.connect(DB,{
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -25,7 +26,7 @@ mongoose.connect(DB,{
 // testTour.save().then((doc)=> {
 //     console.log(doc);
 // }).catch((err)=> {console.log(err)});
-const app = require("./app");
+
 //  
 console.log(process.env.NODE_ENV);
 

@@ -3,7 +3,7 @@ const viewsController = require('../Controllers/viewsController');
 const authController = require('../Controllers/authController');
 const router = express.Router();
 
-app.use(viewsController.alerts);
+router.use(viewsController.alerts);
 
 router.get('/', authController.isLoggedIn, viewsController.getOverview);
 router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
