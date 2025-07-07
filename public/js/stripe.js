@@ -5,7 +5,7 @@ const stripe = Stripe('pk_test_51RfkcbCv294WKXNor1pHNNBzIUVJBrWJlvHfc1hPDJSk9haV
 
 const API_URL =
     process.env.NODE_ENV === 'production'
-        ? 'https://api.mysite.com'
+        ? ''
         : '';
 
 export const bookTour = async tourId => {

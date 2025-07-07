@@ -21,6 +21,13 @@ const bookingController = require('./Controllers/bookingController');
 
 const app = express();
 
+// Disable cache for all requests
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
+
 // to trust all the proxy server 
 app.enable('trust proxy');
 
@@ -99,7 +106,10 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP, please try again in an hour!'
+  message: 'Too many requests from this IP, please try again in an hour!',
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: false // disables internal warning
 });
 app.use('/api', limiter);
 

@@ -5,7 +5,7 @@ import { showAlert } from './alerts';
 // ✅ Add API_URL logic at the top
 const API_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://api.mysite.com' // 🔁 replace with your real domain later
+    ? '' // 🔁 replace with your real domain later
     : ''; // empty = current origin (localhost)
 
 export const login = async (email, password) => {

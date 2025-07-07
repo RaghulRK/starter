@@ -5,7 +5,7 @@ import { showAlert } from './alerts';
 // 🔁 Env-based API base URL
 const API_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://api.mysite.com'
+    ? ''
     : '';
 
 export const updateSettings = async (data, type) => {
