@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - authentication
+      - users
+      - accounts
+
+  authentication:
+    build:
+      context: .
+      dockerfile: docker/authentication.Dockerfile
+    ports:
+      - "4001:4001"
+    environment:
+      - NODE_ENV=docker
+    depends_on:
+      - mongo
+
+  users:
+    build:
+      context: .
+      dockerfile: docker/users.Dockerfile
+    ports:
+      - "4002:4002"
+    environment:
+      - NODE_ENV=docker
+    depends_on:
+      - mongo
+
+  accounts:
+    build:
+      context: .
+      dockerfile: docker/accounts.Dockerfile
+    ports:
+      - "4003:4003"
+    environment:
+      - NODE_ENV=docker
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
