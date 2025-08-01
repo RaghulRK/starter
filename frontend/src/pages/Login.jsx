@@ -1,11 +1,29 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { loginUser } from "../services/authAPI";
 
 export default function Login() {
   const navigate = useNavigate();
-  // error handling with component
-  //const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const LoginUser = async (e) => {
+     try {
+      e.preventDefault();
+      const userData = { email,password };
+      const data = await loginUser(userData);
+      if(data.status === "success"){
+        toast.success("Logged in successfully");
+        navigate("/dashboard");
+      } else{
+        toast(data.message);
+      }
+    } catch (err) {
+      toast("We are facing some technical issues");
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
@@ -14,23 +32,17 @@ export default function Login() {
           All-stop Retail Banking Solution
         </h1>
 
-        <form className="space-y-5" onSubmit={(e) => {
-          //setError("Logged in successfully"); -- trigger by setting error value
-          e.preventDefault();
-          toast.success("Logged in successfully");
-          setTimeout(() => {
-            navigate("/dashboard")
-          }, 5000);
-        }}>
+        <form className="space-y-5" onSubmit={(e) => LoginUser(e)}>
           {/* User ID */}
           <div>
             <label className="block text-sm font-medium text-blue-900 mb-1">
-              User ID
+              Email ID
             </label>
             <input
               type="text"
-              placeholder="Enter your User ID"
+              placeholder="Enter your Email ID"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -43,6 +55,7 @@ export default function Login() {
               type="password"
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 

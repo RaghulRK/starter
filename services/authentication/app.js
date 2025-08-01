@@ -3,9 +3,18 @@ const morgan = require('morgan');
 const userRoutes = require('./routes/userRoutes');
 const AppError = require('./utilis/appError');
 const { globalerrorHandler } = require('./controllers/errorController');
+const cors = require("cors");
+
+
+
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: "http://localhost:3000", // or '*' for public API (not recommended)
+  credentials: true // needed if you're using cookies or withCredentials: true
+}));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

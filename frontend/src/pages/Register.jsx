@@ -1,6 +1,43 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { registerUser } from "../services/authAPI";
 
 export default function Register() {
+  const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [reconfirm, setReconfirm] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
+  const navigate = useNavigate();
+
+  const userRegistration = async (e) => {
+    try {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("name", username);
+      formData.append("password", password);
+      formData.append("passwordConfirm", reconfirm);
+      formData.append("passwordChangedAt", Date.now());
+      if (profilePic) {
+        formData.append("photo", profilePic);
+      }
+
+      const data = await registerUser(formData);
+      if(data.status === "success"){
+        alert("User registration is successfull!");
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error("We are facing some technical difficulties");
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
       <div className="bg-white shadow-md rounded-md p-8 max-w-md w-full">
@@ -15,12 +52,13 @@ export default function Register() {
           {/* User ID */}
           <div>
             <label className="block text-sm font-medium text-blue-900 mb-1">
-              User ID
+              User Name
             </label>
             <input
               type="text"
-              placeholder="Enter your User ID"
+              placeholder="Enter your User Name"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e)=> setUserName(e.target.value)}
             />
           </div>
 
@@ -33,6 +71,7 @@ export default function Register() {
               type="email"
               placeholder="Enter your email"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e)=> setEmail(e.target.value)}
             />
           </div>
 
@@ -45,6 +84,7 @@ export default function Register() {
               type="password"
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e)=> setPassword(e.target.value)}
             />
           </div>
 
@@ -57,6 +97,7 @@ export default function Register() {
               type="password"
               placeholder="Re-enter your password"
               className="w-full px-4 py-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e)=> setReconfirm(e.target.value)}
             />
           </div>
 
@@ -66,8 +107,10 @@ export default function Register() {
               Upload Profile Picture
             </label>
             <input
+              name="photo"
               type="file"
               className="block w-full text-sm text-blue-900 border border-blue-300 rounded file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+              onChange={(e)=> setProfilePic(e.target.files[0])}
             />
           </div>
 
@@ -75,6 +118,7 @@ export default function Register() {
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            onClick={(e) => userRegistration(e)}
           >
             Register
           </button>
